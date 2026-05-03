@@ -26,17 +26,25 @@ class TaskData: ObservableObject {
         }
     }
     
-    // Delete tasks at given offsets (for swipe-to-delete)
+    // Delete tasks at given offsets
     func deleteTask(at offsets: IndexSet) {
         tasks.remove(atOffsets: offsets)
     }
     
-    // Delete categories at given offsets (for swipe-to-delete)
+    // Delete categories at given offsets
     func deleteCategory(at offsets: IndexSet) {
-        categories.remove(atOffsets: offsets)
-    }
+            let removedNames = offsets.map { (index: Int) in categories[index] }
+            categories.remove(atOffsets: offsets)
+            
+            // Reassign any task whose category was just deleted
+            for i in tasks.indices {
+                if removedNames.contains(tasks[i].category) {
+                    tasks[i].category = "No Category"
+                }
+            }
+        }
     
-    // Cycle through statuses on button tap: Not Started → In Progress → Completed → Not Started
+    // Cycle through statuses on button tap
     func cycleStatus(for task: TaskItem) {
         if let index = tasks.firstIndex(where: { (item: TaskItem) in item.id == task.id }) {
             switch tasks[index].status {
