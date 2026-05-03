@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct Midterm_ProjectApp: App {
+    @StateObject var data = TaskData()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(data)
         }
     }
 }
